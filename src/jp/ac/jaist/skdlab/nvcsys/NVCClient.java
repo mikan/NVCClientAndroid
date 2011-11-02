@@ -16,7 +16,7 @@ import android.app.Activity;
  * The non-verbal communication support system - Client program
  * 
  * @author Yutaka Kato
- * @version 0.2.1
+ * @version 0.2.2
  */
 public class NVCClient implements Runnable {
 
@@ -25,7 +25,6 @@ public class NVCClient implements Runnable {
 	protected static String name = null;
 	protected static String title = null;
 	protected static String location = null;
-	protected static float brightness;
 	
 	private static NVCClient instance = null;
 	private static int port;
@@ -34,6 +33,7 @@ public class NVCClient implements Runnable {
 	private Thread thread = null;
 	private static Activity activity = null;
 	private List<String> discussionList = null;
+	private List<String> discussionUserList = null;
 	
 	/**
 	 * Singleton constructor
@@ -76,6 +76,7 @@ public class NVCClient implements Runnable {
 	public void close() throws IOException {
 		sendMessage("CLOSE");
 		socket.close();
+		thread.stop();
 	}
 	
 	/**
@@ -120,17 +121,32 @@ public class NVCClient implements Runnable {
 			}
 		}
 		
+		else if (name.equals("GETU_R")) {
+			discussionUserList = new ArrayList<String>();
+			StringTokenizer token = new StringTokenizer(value, ",");
+			while (token.hasMoreTokens()) {
+				discussionUserList.add(token.nextToken());
+			}
+		}
+		
 		else if (name.equals("ADDD_R")) {
 			
 			// Change trigger of DiscussionActivity
 			if (activity instanceof DiscussionActivity) {
+				sendMessage("GETU " + title);
 	    		enteredDiscussion(title);
 				((DiscussionActivity) activity).changeToActionAcvtivity();
 			}
 		}
 		
-		else if (name.equals("ENTER")) {
-			System.out.println("Entered:" + value);
+		else if (name.equals("ENTER_R")) {
+			
+			// Change trigger of DiscussionActivity
+			if (activity instanceof DiscussionActivity) {
+				sendMessage("GETU " + title);
+	    		enteredDiscussion(title);
+				((DiscussionActivity) activity).changeToActionAcvtivity();				
+			}
 		}
 		
 		else if (name.equals("LEAVE")) {
@@ -142,6 +158,37 @@ public class NVCClient implements Runnable {
 			
 			if (activity instanceof ActionActivity) {
 				((ActionActivity) activity).setCurrentStatus(value);
+				((ActionActivity) activity).setCurrentStatus(value);
+			}
+		}
+		
+		else if (name.equals("UP_ALL")) {
+			if (activity instanceof ActionActivity) {
+				((ActionActivity) activity).mHandler.post(new Runnable() {
+					@Override public void run() {
+						((ActionActivity) activity).upBrightness();
+					}
+				});
+			}
+		}
+		
+		else if (name.equals("DOWN_ALL")) {
+			if (activity instanceof ActionActivity) {
+				((ActionActivity) activity).mHandler.post(new Runnable() {
+					@Override public void run() {
+						((ActionActivity) activity).downBrightness();
+					}
+				});
+			}
+		}
+		
+		else if (name.equals("UP")) {
+			if (activity instanceof ActionActivity) {
+				((ActionActivity) activity).mHandler.post(new Runnable() {
+					@Override public void run() {
+						((ActionActivity) activity).upBrightness();
+					}
+				});
 			}
 		}
 		
@@ -186,5 +233,11 @@ public class NVCClient implements Runnable {
 		System.out.println("exited discussion");
 	}
 	
+	public List<String> getDiscussionList() {
+		return discussionList;
+	}
 	
+	public List<String> getDiscussionUserList() {
+		return discussionUserList;
+	}
 }

@@ -45,7 +45,7 @@ public class NVCClientActivity extends Activity {
         editTextName.setHint("Please input your name");
         
         WindowManager.LayoutParams lp = getWindow().getAttributes();
-        NVCClient.brightness = lp.screenBrightness;
+        NVCClientUtility.brightness = lp.screenBrightness;
         NVCClient.setCurrentActivity(this);
     }
     

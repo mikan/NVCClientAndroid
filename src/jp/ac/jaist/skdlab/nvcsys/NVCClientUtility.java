@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 
 public class NVCClientUtility {
+	
+	protected static float brightness;
 
 	public static void showAlertDialog(
 			String title, String message, Context context) {
@@ -11,5 +13,5 @@ public class NVCClientUtility {
 		dialog.setTitle(title);
 		dialog.setMessage(message);
 		dialog.show();
-	}
+	}	
 }

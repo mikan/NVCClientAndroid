@@ -1,16 +1,22 @@
 package jp.ac.jaist.skdlab.nvcsys;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 public class ActionActivity extends Activity {
 
+	private NVCClient client = null;
 	private TextView textViewTitle = null;
 	private TextView textViewStatus = null;
 	private TextView textViewRemoteOptions = null;
@@ -18,6 +24,9 @@ public class ActionActivity extends Activity {
 	private Button buttonUpAll = null;
 	private Button buttonDownAll = null;
 	private Button buttonUp = null;
+	private Spinner spinnerUsers = null;
+	private ArrayAdapter<String> adapter = null;
+	public Handler mHandler = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -25,6 +34,8 @@ public class ActionActivity extends Activity {
 		
 		// Set layout XML
 		setContentView(R.layout.action);
+		
+		mHandler = new Handler();
 		
 		// Components
 		textViewTitle = (TextView) this.findViewById(R.id.textViewTitle);
@@ -40,6 +51,8 @@ public class ActionActivity extends Activity {
 		// Button actions
 		buttonQuit.setOnClickListener(mQuitListener);
 		buttonUpAll.setOnClickListener(mUpAllListener);
+		buttonDownAll.setOnClickListener(mDownAllListener);
+		buttonUp.setOnClickListener(mUpListener);
 		
 		//
 		textViewTitle.setText("Title: " + NVCClient.title);
@@ -50,6 +63,23 @@ public class ActionActivity extends Activity {
 			buttonDownAll.setVisibility(View.GONE);
 			buttonUp.setVisibility(View.GONE);
 		}
+		
+		// Client
+		client = NVCClient.getInstance();
+				
+		// Spinner
+		spinnerUsers = (Spinner) this.findViewById(
+				R.id.spinnerUsers);
+		adapter = new ArrayAdapter<String>(
+				this, android.R.layout.simple_spinner_item);
+		adapter.setDropDownViewResource(
+				android.R.layout.simple_spinner_dropdown_item);
+		List<String> discussionList = client.getDiscussionUserList();
+		for (String s : discussionList) {
+			adapter.add(s);
+		}
+		spinnerUsers.setAdapter(adapter);
+		
 		
 		NVCClient.setCurrentActivity(this);
 	}
@@ -65,7 +95,23 @@ public class ActionActivity extends Activity {
     	public void onClick(View v) {
     		
     		NVCClient client = NVCClient.getInstance();
-    		client.sendMessage("DOWN");
+    		client.sendMessage("UP_ALL");
+    	}
+    };
+    
+    OnClickListener mDownAllListener = new OnClickListener() {
+    	public void onClick(View v) {
+    		
+    		NVCClient client = NVCClient.getInstance();
+    		client.sendMessage("DOWN_ALL");
+    	}
+    };
+    
+    OnClickListener mUpListener = new OnClickListener() {
+    	public void onClick(View v) {
+    		
+    		NVCClient client = NVCClient.getInstance();
+    		client.sendMessage("UP " + (String) spinnerUsers.getSelectedItem());
     	}
     };
 	
@@ -83,6 +129,18 @@ public class ActionActivity extends Activity {
     	}
     };
     
+	public void upBrightness() {
+		WindowManager.LayoutParams lp = getWindow().getAttributes();
+		lp.screenBrightness = 1.0f;
+		getWindow().setAttributes(lp);
+	}
+
+	public void downBrightness() {
+		WindowManager.LayoutParams lp = getWindow().getAttributes();
+		lp.screenBrightness = 0.1f;
+		getWindow().setAttributes(lp);		
+	}
+    
     public void setCurrentStatus(String status) {
     	
     	if (status == null) {
@@ -93,5 +151,13 @@ public class ActionActivity extends Activity {
     	} catch (Exception e) {
     		// through exceptions
     	}
+    }
+    
+    public void setDiscussionMemberList(List<String> userList) {
+    	adapter.clear();
+    	for (String s : userList) {
+			adapter.add(s);
+		}
+    	spinnerUsers.setAdapter(adapter);
     }
 }
