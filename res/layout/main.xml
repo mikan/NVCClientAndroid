@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+
+    <TextView android:text="Server address:" android:layout_width="wrap_content" android:id="@+id/textView1" android:layout_height="wrap_content" android:textAppearance="?android:attr/textAppearanceMedium"></TextView>
+
+    <EditText
+        android:id="@+id/editTextAddress"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:singleLine="true" >
+
+        <requestFocus></requestFocus>
+    </EditText>
+    <TextView android:text="Port:" android:layout_width="wrap_content" android:id="@+id/textView2" android:layout_height="wrap_content" android:textAppearance="?android:attr/textAppearanceMedium"></TextView>
+
+    <EditText
+        android:id="@+id/editTextPort"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number|numberDecimal"
+        android:singleLine="true" >
+
+</EditText>
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Name:"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/editTextName"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="true" />
+
+    <RadioGroup
+        android:id="@+id/radioGroupLocation"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/radioLocal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:checked="true"
+            android:text="Local  " />
+
+        <RadioButton
+            android:id="@+id/radioRemote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Remote  " />
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/buttonConnect"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Connect" >
+</Button>
+
+    <ProgressBar
+        android:id="@+id/progressBarConnect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="invisible" />
+
+    <Button
+        android:id="@+id/buttonBacklight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Backlight" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="bottom|center|left"
+        android:gravity="center_horizontal"
+        android:text="2011 JAIST/Shikida Lab."
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+</LinearLayout>

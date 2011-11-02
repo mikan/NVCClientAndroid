@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/textViewTitle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="Title: "
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/textViewStatus"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Status: "
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="     "
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/textViewRemoteOptions"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Remote options"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <Button
+        android:id="@+id/buttonUpAll"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Up all" />
+
+    <Button
+        android:id="@+id/buttonDownAll"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Down all" />
+
+    <Spinner
+        android:id="@+id/spinnerUsers"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/buttonUp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Up" />
+
+    <TextView
+        android:id="@+id/TextView01"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="     "
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <Button
+        android:id="@+id/buttonQuit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Quit" />
+
+</LinearLayout>
