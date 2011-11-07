@@ -11,7 +11,13 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.TextView;
 
+/**
+ * 
+ * @author Yutaka Kato
+ * @version 0.3.0
+ */
 public class NVCClientActivity extends Activity {
 	
 	private Button buttonConnect = null;
@@ -43,6 +49,10 @@ public class NVCClientActivity extends Activity {
         editTextAddress.setText("150.65.227.109");
         editTextPort.setText("30001");
         editTextName.setHint("Please input your name");
+        
+		((TextView) this.findViewById(R.id.textViewCredit)).setText(
+				"NVCClient for Android " + NVCClient.VERSION + "\n" +
+				"2011 JAIST Shikida Lab.");
         
         WindowManager.LayoutParams lp = getWindow().getAttributes();
         NVCClientUtility.brightness = lp.screenBrightness;
@@ -91,6 +101,9 @@ public class NVCClientActivity extends Activity {
     OnClickListener mConnectListener = new OnClickListener() {
     	public void onClick(View v) {
     		
+//    		NVCClientUtility.startProgressDialog(
+//    				"Status", "Connecting...", NVCClientActivity.this);
+    		
     		CharSequence portText = editTextPort.getText();
     		String address = editTextAddress.getText().toString();
     		String name = editTextName.getText().toString();
@@ -119,17 +132,18 @@ public class NVCClientActivity extends Activity {
     		}
 
     		// Connect
-//    		progressBarConnect.setVisibility(ProgressBar.VISIBLE);
-//    		progressBarConnect.startAnimation(progressBarConnect.getAnimation());
     		NVCClient.setAddress(address, port);
     		NVCClient client = NVCClient.getInstance();
     		boolean result = client.connectServer();
     		if (!result) {
+//    			NVCClientUtility.stopProgressDialog();
     			NVCClientUtility.showAlertDialog(
     					"ERROR", "Connect failed", NVCClientActivity.this);
     			return;
     		}
+    		NVCClient.waitForIntent = true;
     		client.sendMessage("GETD");
+//    		NVCClientUtility.stopProgressDialog();
     	}
     };
     
@@ -141,11 +155,11 @@ public class NVCClientActivity extends Activity {
     		
     		float prev = lp.screenBrightness;
     		
-    		if (prev == 0.1f) {
-    			lp.screenBrightness = 1.0f;
+    		if (prev == NVCClientUtility.BRIGHTNESS_LOWEST) {
+    			lp.screenBrightness = NVCClientUtility.BRIGHTNESS_HIGHEST;
     			getWindow().setAttributes(lp);
     		} else {
-        		lp.screenBrightness = 0.1f;
+        		lp.screenBrightness = NVCClientUtility.BRIGHTNESS_LOWEST;
         		getWindow().setAttributes(lp);
     			
     		}

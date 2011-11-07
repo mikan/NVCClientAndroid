@@ -80,8 +80,10 @@ public class ActionActivity extends Activity {
 		}
 		spinnerUsers.setAdapter(adapter);
 		
-		
 		NVCClient.setCurrentActivity(this);
+		
+		// Keep screen on
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	}
 	
 	public void changeBrightness(float value) {
@@ -111,6 +113,7 @@ public class ActionActivity extends Activity {
     	public void onClick(View v) {
     		
     		NVCClient client = NVCClient.getInstance();
+//    		client.sendMessage("DOWN_ALL");
     		client.sendMessage("UP " + (String) spinnerUsers.getSelectedItem());
     	}
     };
@@ -118,9 +121,12 @@ public class ActionActivity extends Activity {
 	OnClickListener mQuitListener = new OnClickListener() {
     	public void onClick(View v) {
     		
+    		// Turn off "Keep screen on" flag
+    		ActionActivity.this.getWindow().clearFlags(
+    				WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    		
     		NVCClient client = NVCClient.getInstance();
-
-    		client.sendMessage("EXIT " + NVCClient.title);
+    		client.sendMessage("EXIT " + NVCClient.title);    			
     		
     		// Previous window: EchoClientAndroidctivity
     		Intent intent = new Intent(
@@ -131,14 +137,14 @@ public class ActionActivity extends Activity {
     
 	public void upBrightness() {
 		WindowManager.LayoutParams lp = getWindow().getAttributes();
-		lp.screenBrightness = 1.0f;
+		lp.screenBrightness = NVCClientUtility.BRIGHTNESS_HIGHEST;
 		getWindow().setAttributes(lp);
 	}
 
 	public void downBrightness() {
 		WindowManager.LayoutParams lp = getWindow().getAttributes();
-		lp.screenBrightness = 0.1f;
-		getWindow().setAttributes(lp);		
+		lp.screenBrightness = NVCClientUtility.BRIGHTNESS_LOWEST;
+		getWindow().setAttributes(lp);
 	}
     
     public void setCurrentStatus(String status) {

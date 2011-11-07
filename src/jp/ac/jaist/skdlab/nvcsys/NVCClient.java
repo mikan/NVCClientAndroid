@@ -16,15 +16,18 @@ import android.app.Activity;
  * The non-verbal communication support system - Client program
  * 
  * @author Yutaka Kato
- * @version 0.2.2
+ * @version 0.3.0
  */
 public class NVCClient implements Runnable {
 
+	public static final String VERSION = "0.3.0";
 	public static final int DEFAULT_PORT = 300001;
 	
+	protected static boolean waitForIntent = false;
 	protected static String name = null;
 	protected static String title = null;
 	protected static String location = null;
+	protected static boolean hosted = false;
 	
 	private static NVCClient instance = null;
 	private static int port;
@@ -102,9 +105,21 @@ public class NVCClient implements Runnable {
 	 * @param name Command name
 	 * @param value Command value
 	 */
-	public void reachedMessage(String name, String value) {
+	public void reachedMessage(final String name, final String value) {
 		
 		System.out.println("Reached: " + name + " " + value);
+		
+		// Update status string at ActionActivity
+		if (activity instanceof ActionActivity) {
+			((ActionActivity) activity).mHandler.post(new Runnable() {
+				@Override public void run() {
+					try {
+						((ActionActivity) activity).setCurrentStatus(
+								"[Reached] " + name + " " + value);
+					} catch (Exception e) { /*Maybe catch ClassCastException*/ }
+				}
+			});
+		}
 		
 		if (name.equals("GETD_R")) {
 			discussionList = new ArrayList<String>();
@@ -116,8 +131,18 @@ public class NVCClient implements Runnable {
 			sendMessage("CHANGE " + NVCClient.name);
 			
 			// Change trigger of NVCClientActivity
-			if (activity instanceof NVCClientActivity) {
-				((NVCClientActivity) activity).changeToDiscussionActivity();				
+			if (activity instanceof NVCClientActivity && waitForIntent) {
+				waitForIntent = false;
+				((NVCClientActivity) activity).changeToDiscussionActivity();
+			}
+			// Update status string at ActionActivity
+			else if (activity instanceof ActionActivity) {
+				((ActionActivity) activity).mHandler.post(new Runnable() {
+					@Override public void run() {
+						((ActionActivity) activity).setCurrentStatus(
+								"[Change] " + value);
+					}
+				});
 			}
 		}
 		
@@ -145,20 +170,65 @@ public class NVCClient implements Runnable {
 			if (activity instanceof DiscussionActivity) {
 				sendMessage("GETU " + title);
 	    		enteredDiscussion(title);
-				((DiscussionActivity) activity).changeToActionAcvtivity();				
+				((DiscussionActivity) activity).changeToActionAcvtivity();
+			}
+		}
+		
+		else if (name.equals("ENTER")) {
+			System.out.println("Entered: " + value);
+			
+			if (value != null && discussionUserList != null) {
+				if (!discussionUserList.contains(value)) {
+					discussionUserList.add(value);					
+				}
+			}
+			
+			// Update status string at ActionActivity
+			if (activity instanceof ActionActivity) {
+				((ActionActivity) activity).mHandler.post(new Runnable() {
+					@Override public void run() {
+						((ActionActivity) activity).setCurrentStatus(
+								"[Entered] " + value);
+						((ActionActivity) activity).setDiscussionMemberList(
+								discussionUserList);
+					}
+				});
 			}
 		}
 		
 		else if (name.equals("LEAVE")) {
-			System.out.println("Leaved:  + value");			
+			System.out.println("Leaved: " + value);
+			
+			if (value != null && discussionUserList != null) {
+				if (discussionUserList.contains(value)) {
+					discussionUserList.remove(value);									
+				}
+			}
+
+			// Update status string at ActionActivity
+			if (activity instanceof ActionActivity) {
+				((ActionActivity) activity).mHandler.post(new Runnable() {
+					@Override public void run() {
+						((ActionActivity) activity).setCurrentStatus(
+								"[Leaved] " + value);
+						((ActionActivity) activity).setDiscussionMemberList(
+								discussionUserList);
+					}
+				});
+			}
 		}
 		
 		else if (name.equals("MESSAGE")) {
 			System.out.println("Message: " + value);
 			
+			// Update status string at ActionActivity
 			if (activity instanceof ActionActivity) {
-				((ActionActivity) activity).setCurrentStatus(value);
-				((ActionActivity) activity).setCurrentStatus(value);
+				((ActionActivity) activity).setCurrentStatus(
+						"[Message] " + value);
+			}			// Update status string at ActionActivity
+			if (activity instanceof ActionActivity) {
+				((ActionActivity) activity).setCurrentStatus(
+						"[Message] " + value);
 			}
 		}
 		
@@ -183,7 +253,8 @@ public class NVCClient implements Runnable {
 		}
 		
 		else if (name.equals("UP")) {
-			if (activity instanceof ActionActivity) {
+			if (activity instanceof ActionActivity &&
+					value.equals(NVCClient.name)) {		// Target = Me
 				((ActionActivity) activity).mHandler.post(new Runnable() {
 					@Override public void run() {
 						((ActionActivity) activity).upBrightness();

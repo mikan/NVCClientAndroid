@@ -39,7 +39,7 @@ public class DiscussionActivity extends Activity {
 		buttonJoin.setOnClickListener(mJoinListener);
 		
 		//
-		editTextTitle.setHint(NVCClient.name + "'s discussion");
+		editTextTitle.setHint(NVCClient.name + "Room");
 		
 		// Client
 		client = NVCClient.getInstance();
@@ -65,12 +65,16 @@ public class DiscussionActivity extends Activity {
     		
     		String title = editTextTitle.getText().toString();
     		if (title == null) {
-    			title = NVCClient.name + "'s discussion";
+    			title = new String();
+    		}
+    		if (title.length() == 0) {
+    			title = NVCClient.name + "Room";
     		}
     		
     		NVCClient.title = title;
+    		NVCClient.hosted = true;
     		NVCClient client = NVCClient.getInstance();
-    		client.sendMessage("ADDD " + title);
+    		client.sendMessage("ADDD " + NVCClient.title);
     	}
     };
     
@@ -83,6 +87,7 @@ public class DiscussionActivity extends Activity {
     		}
     		
     		NVCClient.title = title;
+    		NVCClient.hosted = false;
     		NVCClient client = NVCClient.getInstance();
     		client.sendMessage("ENTER " + title);
     	}
@@ -96,11 +101,11 @@ public class DiscussionActivity extends Activity {
 				client.close();
 			} catch (IOException e) {
 				e.printStackTrace();
-			} finally {
-				Intent intent = new Intent(
-						DiscussionActivity.this, NVCClientActivity.class);
-				startActivity(intent);
 			}
+    		
+			Intent intent = new Intent(
+					DiscussionActivity.this, NVCClientActivity.class);
+			startActivity(intent);
     	}
     };
     
