@@ -21,7 +21,7 @@ import android.app.Activity;
 public class NVCClient implements Runnable {
 
 	public static final String VERSION = "0.3.2";
-	public static final int DEFAULT_PORT = 300001;
+	public static final int DEFAULT_PORT = 30001;
 	public static final String DEFAULT_ADDRESS = "150.65.227.109";
 	
 	protected static boolean waitForIntent = false;
@@ -63,6 +63,7 @@ public class NVCClient implements Runnable {
 	}
 	
 	public boolean connectServer() {
+		System.out.println("Connecting to " + address + ":" + port);
 		try {
 			socket = new Socket(address, port);
 			System.out.println("Connected with " + address + ":" + port);

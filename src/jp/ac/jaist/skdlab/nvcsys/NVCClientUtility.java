@@ -70,7 +70,11 @@ public class NVCClientUtility {
 	public static String getPreference(
 			Context context, String key, String defaultValue) {
 		SharedPreferences pref = getPreferences(context);
-		return pref.getString(key, defaultValue);
+		String value = pref.getString(key,  defaultValue);
+		if (value.length() == 0) {
+			value = defaultValue;
+		}
+		return value;
 	}
 
 	public static void showAlertDialog(
