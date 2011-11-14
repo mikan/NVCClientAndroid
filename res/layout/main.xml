@@ -48,19 +48,19 @@
         android:orientation="horizontal" >
 
         <RadioButton
-            android:id="@+id/radioLocal"
+            android:id="@+id/radioClient"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:checked="true"
-            android:text="Local  " />
+            android:text="Client  " />
 
         <RadioButton
-            android:id="@+id/radioRemote"
+            android:id="@+id/radioDebug"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Remote  " />
+            android:text="Debug  " />
 
     </RadioGroup>
 
@@ -75,7 +75,7 @@
         android:id="@+id/buttonBacklight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Test backlight" />
+        android:text="Backlight settings" />
 
     <TextView
         android:id="@+id/textViewCredit"

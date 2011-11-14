@@ -16,17 +16,18 @@ import android.app.Activity;
  * The non-verbal communication support system - Client program
  * 
  * @author Yutaka Kato
- * @version 0.3.0
+ * @version 0.3.2
  */
 public class NVCClient implements Runnable {
 
-	public static final String VERSION = "0.3.0";
+	public static final String VERSION = "0.3.2";
 	public static final int DEFAULT_PORT = 300001;
+	public static final String DEFAULT_ADDRESS = "150.65.227.109";
 	
 	protected static boolean waitForIntent = false;
 	protected static String name = null;
 	protected static String title = null;
-	protected static String location = null;
+	protected static boolean debug = false;
 	protected static boolean hosted = false;
 	
 	private static NVCClient instance = null;
@@ -79,7 +80,7 @@ public class NVCClient implements Runnable {
 	public void close() throws IOException {
 		sendMessage("CLOSE");
 		socket.close();
-		thread.stop();
+		thread.interrupt();
 	}
 	
 	/**
@@ -253,13 +254,22 @@ public class NVCClient implements Runnable {
 		}
 		
 		else if (name.equals("UP")) {
-			if (activity instanceof ActionActivity &&
-					value.equals(NVCClient.name)) {		// Target = Me
+			if (activity instanceof ActionActivity) {
+				
 				((ActionActivity) activity).mHandler.post(new Runnable() {
 					@Override public void run() {
-						((ActionActivity) activity).upBrightness();
+						((ActionActivity) activity).downBrightness();
 					}
 				});
+				
+				// Target is me
+				if (value.equals(NVCClient.name)) {
+					((ActionActivity) activity).mHandler.post(new Runnable() {
+						@Override public void run() {
+							((ActionActivity) activity).upBrightness();
+						}
+					});
+				}
 			}
 		}
 		
@@ -280,6 +290,9 @@ public class NVCClient implements Runnable {
 					new InputStreamReader(socket.getInputStream()));
 			while (!socket.isClosed()) {
 				String message = reader.readLine();
+				if (message == null) {
+					continue;
+				}
 				String[] messageArray = message.split(" ", 2);
 				String name = messageArray[0];
 				String value = messageArray.length < 2 ? "" : messageArray[1];

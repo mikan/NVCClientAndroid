@@ -57,7 +57,7 @@ public class ActionActivity extends Activity {
 		//
 		textViewTitle.setText("Title: " + NVCClient.title);
 		
-		if (NVCClient.location.equals("local")) {
+		if (!NVCClient.debug) {
 			textViewRemoteOptions.setVisibility(View.GONE);
 			buttonUpAll.setVisibility(View.GONE);
 			buttonDownAll.setVisibility(View.GONE);
@@ -137,13 +137,13 @@ public class ActionActivity extends Activity {
     
 	public void upBrightness() {
 		WindowManager.LayoutParams lp = getWindow().getAttributes();
-		lp.screenBrightness = NVCClientUtility.BRIGHTNESS_HIGHEST;
+		lp.screenBrightness = NVCClientUtility.upperBrightness;
 		getWindow().setAttributes(lp);
 	}
 
 	public void downBrightness() {
 		WindowManager.LayoutParams lp = getWindow().getAttributes();
-		lp.screenBrightness = NVCClientUtility.BRIGHTNESS_LOWEST;
+		lp.screenBrightness = NVCClientUtility.lowerBrightness;
 		getWindow().setAttributes(lp);
 	}
     

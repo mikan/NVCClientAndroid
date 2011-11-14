@@ -21,6 +21,7 @@
         </activity>
         <activity android:name="ActionActivity"></activity>
         <activity android:name="DiscussionActivity"></activity>
+        <activity android:name="SettingsActivity"></activity>
     </application>
 
 </manifest>

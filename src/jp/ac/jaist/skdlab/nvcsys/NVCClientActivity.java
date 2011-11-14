@@ -2,6 +2,7 @@ package jp.ac.jaist.skdlab.nvcsys;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,8 +26,8 @@ public class NVCClientActivity extends Activity {
 	private EditText editTextAddress = null;
 	private EditText editTextPort = null;
 	private EditText editTextName = null;
-//	private RadioButton radioLocal = null;
-	private RadioButton radioRemote = null;
+	private RadioButton radioClient = null;
+	private RadioButton radioDebug = null;
 
 	
     @Override
@@ -43,16 +44,30 @@ public class NVCClientActivity extends Activity {
         editTextAddress = (EditText) this.findViewById(R.id.editTextAddress);
         editTextPort = (EditText) this.findViewById(R.id.editTextPort);
         editTextName = (EditText) this.findViewById(R.id.editTextName);
-//        radioLocal = (RadioButton) this.findViewById(R.id.radioLocal);
-        radioRemote = (RadioButton) this.findViewById(R.id.radioRemote);
+        radioClient = (RadioButton) this.findViewById(R.id.radioClient);
+        radioDebug = (RadioButton) this.findViewById(R.id.radioDebug);
         
-        editTextAddress.setText("150.65.227.109");
-        editTextPort.setText("30001");
+        editTextAddress.setText(NVCClientUtility.getPreference(
+        		this, "address", NVCClient.DEFAULT_ADDRESS));
+        editTextPort.setText(Integer.toString(NVCClientUtility.getPreference(
+        		this, "port", NVCClient.DEFAULT_PORT)));
+        editTextName.setText(NVCClientUtility.getPreference(
+        		this, "name", ""));
         editTextName.setHint("Please input your name");
+        
+        if (NVCClientUtility.getPreference(this, "debugable", false)) {
+        	radioClient.setChecked(false);
+        	radioDebug.setChecked(true);
+        } else {
+        	radioClient.setChecked(true);
+        	radioDebug.setChecked(false);
+        }
         
 		((TextView) this.findViewById(R.id.textViewCredit)).setText(
 				"NVCClient for Android " + NVCClient.VERSION + "\n" +
 				"2011 JAIST Shikida Lab.");
+		
+		NVCClientUtility.loadConfigurationFromSharedPreferences(this);
         
         WindowManager.LayoutParams lp = getWindow().getAttributes();
         NVCClientUtility.brightness = lp.screenBrightness;
@@ -125,10 +140,10 @@ public class NVCClientActivity extends Activity {
     		}
     		
     		// Check radio buttons
-    		if (radioRemote.isChecked()) {
-    			NVCClient.location = "remote";
+    		if (radioDebug.isChecked()) {
+    			NVCClient.debug = true;
     		} else {
-    			NVCClient.location = "local";
+    			NVCClient.debug = false;
     		}
 
     		// Connect
@@ -141,9 +156,13 @@ public class NVCClientActivity extends Activity {
     					"ERROR", "Connect failed", NVCClientActivity.this);
     			return;
     		}
+    		
     		NVCClient.waitForIntent = true;
     		client.sendMessage("GETD");
 //    		NVCClientUtility.stopProgressDialog();
+    		
+    		// Save input parameters
+    		setPreferences(address, port, name, NVCClient.debug);
     	}
     };
     
@@ -151,27 +170,20 @@ public class NVCClientActivity extends Activity {
     OnClickListener mBacklightListener = new OnClickListener() {
     	public void onClick(View v) {
     		
+    		/*
     		WindowManager.LayoutParams lp = getWindow().getAttributes();
     		
     		float prev = lp.screenBrightness;
     		
-    		if (prev == NVCClientUtility.BRIGHTNESS_LOWEST) {
-    			lp.screenBrightness = NVCClientUtility.BRIGHTNESS_HIGHEST;
+    		if (prev == NVCClientUtility.lowerBrightness) {
+    			lp.screenBrightness = NVCClientUtility.upperBrightness;
     			getWindow().setAttributes(lp);
     		} else {
-        		lp.screenBrightness = NVCClientUtility.BRIGHTNESS_LOWEST;
+        		lp.screenBrightness = NVCClientUtility.lowerBrightness;
         		getWindow().setAttributes(lp);
-    			
     		}
-    		
-    		/*
-    		try { Thread.sleep(2000); } catch (InterruptedException e) {}
-    		lp.screenBrightness = 0.1f;
-    		getWindow().setAttributes(lp);
-    		try { Thread.sleep(2000); } catch (InterruptedException e) {}
-    		lp.screenBrightness = prev;
-    		getWindow().setAttributes(lp);
     		*/
+    		changeSettingsActivity();
     	}
     };
 
@@ -180,5 +192,24 @@ public class NVCClientActivity extends Activity {
 		Intent intent = new Intent(
 				NVCClientActivity.this, DiscussionActivity.class);
 		startActivity(intent);
+	}
+	
+	public void changeSettingsActivity() {
+		Intent intent = new Intent(
+				NVCClientActivity.this, SettingsActivity.class);
+		startActivity(intent);
+	}
+	
+	private void setPreferences(
+			String address,
+			int port, 
+			String name,
+			boolean debugable) {
+		Editor editor = NVCClientUtility.getPreferences(this).edit();
+		editor.putString("address", address);
+		editor.putInt("port", port);
+		editor.putString("name", name);
+		editor.putBoolean("debugable", debugable);
+		editor.commit();
 	}
 }
