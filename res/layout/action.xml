@@ -19,7 +19,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Status: "
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/black" />
 
     <TextView
@@ -56,9 +56,9 @@
         android:layout_height="wrap_content"
         android:text="   "
         android:textAppearance="?android:attr/textAppearanceMedium" />
-
+
     <TextView
-        android:id="@+id/TextView02"
+        android:id="@+id/TextViewDiscussionMembers"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"

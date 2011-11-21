@@ -16,13 +16,13 @@ import android.app.Activity;
  * The non-verbal communication support system - Client program
  * 
  * @author Yutaka Kato
- * @version 0.3.2
+ * @version 0.3.5
  */
 public class NVCClient implements Runnable {
 
-	public static final String VERSION = "0.3.2";
+	public static final String VERSION = "0.3.5";
 	public static final int DEFAULT_PORT = 30001;
-	public static final String DEFAULT_ADDRESS = "150.65.227.109";
+	public static final String DEFAULT_ADDRESS = "lss2-is12.jaist.ac.jp";
 	
 	protected static boolean waitForIntent = false;
 	protected static String name = null;

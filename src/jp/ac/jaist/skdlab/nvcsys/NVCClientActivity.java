@@ -169,20 +169,6 @@ public class NVCClientActivity extends Activity {
     
     OnClickListener mBacklightListener = new OnClickListener() {
     	public void onClick(View v) {
-    		
-    		/*
-    		WindowManager.LayoutParams lp = getWindow().getAttributes();
-    		
-    		float prev = lp.screenBrightness;
-    		
-    		if (prev == NVCClientUtility.lowerBrightness) {
-    			lp.screenBrightness = NVCClientUtility.upperBrightness;
-    			getWindow().setAttributes(lp);
-    		} else {
-        		lp.screenBrightness = NVCClientUtility.lowerBrightness;
-        		getWindow().setAttributes(lp);
-    		}
-    		*/
     		changeSettingsActivity();
     	}
     };

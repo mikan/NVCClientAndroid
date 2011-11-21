@@ -54,7 +54,7 @@ public class ActionActivity extends Activity {
 		buttonDownAll.setOnClickListener(mDownAllListener);
 		buttonUp.setOnClickListener(mUpListener);
 		
-		//
+		// Set discussion title to top label
 		textViewTitle.setText("Title: " + NVCClient.title);
 		
 		if (!NVCClient.debug) {
@@ -64,7 +64,7 @@ public class ActionActivity extends Activity {
 			buttonUp.setVisibility(View.GONE);
 		}
 		
-		// Client
+		// Get client instance
 		client = NVCClient.getInstance();
 				
 		// Spinner
@@ -87,7 +87,6 @@ public class ActionActivity extends Activity {
 	}
 	
 	public void changeBrightness(float value) {
-		
 		WindowManager.LayoutParams lp = getWindow().getAttributes();
 		lp.screenBrightness = 1.0f;
 		getWindow().setAttributes(lp);
@@ -95,7 +94,6 @@ public class ActionActivity extends Activity {
 	
 	OnClickListener mUpAllListener = new OnClickListener() {
     	public void onClick(View v) {
-    		
     		NVCClient client = NVCClient.getInstance();
     		client.sendMessage("UP_ALL");
     	}
@@ -103,7 +101,6 @@ public class ActionActivity extends Activity {
     
     OnClickListener mDownAllListener = new OnClickListener() {
     	public void onClick(View v) {
-    		
     		NVCClient client = NVCClient.getInstance();
     		client.sendMessage("DOWN_ALL");
     	}
@@ -111,7 +108,6 @@ public class ActionActivity extends Activity {
     
     OnClickListener mUpListener = new OnClickListener() {
     	public void onClick(View v) {
-    		
     		NVCClient client = NVCClient.getInstance();
 //    		client.sendMessage("DOWN_ALL");
     		client.sendMessage("UP " + (String) spinnerUsers.getSelectedItem());
