@@ -128,6 +128,12 @@ public class DiscussionActivity extends Activity {
     	}
     };
     
+    public void changeToNVCClientActivity() {
+		Intent intent = new Intent(
+				DiscussionActivity.this, NVCClientActivity.class);
+		startActivity(intent);
+    }
+    
     public void changeToActionAcvtivity() {
 		Intent intent = new Intent(
 				DiscussionActivity.this, ActionActivity.class);

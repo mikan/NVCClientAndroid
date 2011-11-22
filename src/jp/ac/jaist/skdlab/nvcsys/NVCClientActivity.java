@@ -17,7 +17,7 @@ import android.widget.TextView;
 /**
  * 
  * @author Yutaka Kato
- * @version 0.3.0
+ * @version 0.3.6
  */
 public class NVCClientActivity extends Activity {
 	

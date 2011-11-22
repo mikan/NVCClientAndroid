@@ -16,11 +16,11 @@ import android.app.Activity;
  * The non-verbal communication support system - Client program
  * 
  * @author Yutaka Kato
- * @version 0.3.5
+ * @version 0.3.6
  */
 public class NVCClient implements Runnable {
 
-	public static final String VERSION = "0.3.5";
+	public static final String VERSION = "0.3.6";
 	public static final int DEFAULT_PORT = 30001;
 	public static final String DEFAULT_ADDRESS = "lss2-is12.jaist.ac.jp";
 	
@@ -276,6 +276,27 @@ public class NVCClient implements Runnable {
 		
 		else if (name.equals("OK")) {
 //			System.out.println("OK reached");
+		}
+		
+		else if (name.equals("KICK")) {
+			if (value.equals(NVCClient.name)) {
+				sendMessage("CLOSE");
+				if (activity instanceof ActionActivity) {
+					((ActionActivity) activity).mHandler.post(new Runnable() {
+						@Override public void run() {
+							((ActionActivity) activity
+									).changeToNVCClientActivity();
+						}
+					});
+				} else if (activity instanceof DiscussionActivity) {
+					((ActionActivity) activity).mHandler.post(new Runnable() {
+						@Override public void run() {
+							((DiscussionActivity) activity
+									).changeToNVCClientActivity();
+						}
+					});
+				}
+			}
 		}
 		
 		else if (name.equals("ERROR")) {

@@ -162,4 +162,10 @@ public class ActionActivity extends Activity {
 		}
     	spinnerUsers.setAdapter(adapter);
     }
+    
+    public void changeToNVCClientActivity() {
+		Intent intent = new Intent(
+				ActionActivity.this, NVCClientActivity.class);
+		startActivity(intent);
+    }
 }
